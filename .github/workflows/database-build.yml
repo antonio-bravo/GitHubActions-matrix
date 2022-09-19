@@ -1,0 +1,55 @@
+name: Database Build
+
+on:
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      db-projectname:
+        description: Database [dbProject1, dbProject2]
+        required: true
+
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  matrix:
+    name: Generate matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix-json: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        shell: pwsh
+        #use a small powershell script to generaet the matrix
+        # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
+        #echo '::set-output name=matrix::[{"db":"db1"}]'
+        run: |
+            "& .github/workflows/create-matrix.ps1"
+
+  build:
+    needs: [matrix]
+    runs-on: ubuntu-latest 
+
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+
+
+    steps:
+      - name: Show matrix ${{ matrix.cfg.db }}
+        shell: pwsh
+        run: |
+            echo "DBName = ${{ matrix.cfg.db }}"
+      
+      # - name: Database Build ${{ matrix.cfg.db }}
+      #   uses: ./.github/actions/database-build
+      #   with:
+      #     db-projectname: ${{ matrix.cfg.db }}
+      #     upload-dacpac: true

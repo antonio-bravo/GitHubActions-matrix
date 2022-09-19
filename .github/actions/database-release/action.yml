@@ -1,0 +1,61 @@
+name: Database release
+description: This workflow publishes the dacpac to the database.
+inputs:
+  targetSqlServerName:
+    required: true
+    description: The full name to the database, e.g. 'myserver-dev.database.windows.net'
+  connectionString:
+    required: true
+    description: The connection string to the database
+  db-projectname:
+    required: true
+    description: db-projectname
+  azure-credentials:
+    required: true
+    description: A json with the complete credentials for the service principal (incl. subscriptionId, tenantId, clientId, clientSecret)
+  publish-profile-path:
+    required: false
+    description: Specifies the path to the publish profile XML file
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Download dacpac file 
+      uses: actions/download-artifact@v2
+      with:
+        name: dacpac-file
+
+    - name: Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.AZURE_CREDENTIALS }}        
+
+    - name: Azure SQL Deploy
+      uses: Azure/sql-action@v1
+      with:
+        # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
+        server-name: ${{ inputs.targetSqlServerName }}
+        # The connection string, including authentication information, for the Azure SQL Server database.
+        connection-string: ${{ inputs.connectionString }}
+        # Path to DACPAC file to deploy
+        dacpac-package: .\db\${{ inputs.db-projectname }}\bin\Release\${{ inputs.db-projectname }}.dacpac
+        # Path to SQL script file to deploy
+        sql-file: # optional
+        # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
+        arguments: # optional
+        #/v:AppUserPassword=${{ secrets.AZURE_SQL_PASSWORD }} /v:ETLUserPassword=${{ secrets.AZURE_SQL_PASSWORD }}
+        # In case Build and Publish option is selected, additional arguments that will be applied to dotnet build when building the database project.
+        build-arguments: # optional              
+
+
+
+    # - name: Publish dacpac with dynamic firewall rule generation
+    #   uses: azure/sql-action@v1
+    #   with:
+    #     server-name: ${{ inputs.fullServerName }}
+    #     connection-string: ${{ inputs.connectionString }}
+    #     dacpac-package: 'Database.Sql.Build.dacpac'
+    #     arguments: '/pr:${{ inputs.publish-profile-path }}'

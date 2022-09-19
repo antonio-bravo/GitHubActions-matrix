@@ -1,0 +1,48 @@
+name: Database build action
+description: This action builds the Sql.Build project and uploads the dacpac file, if selected.
+inputs:
+  db-projectname:
+    required: true
+    description: Get DB Project Name under DB\DBProjectName\DBProjectName.sqlproj the value to pass will be "DBProjectName" 
+
+  upload-dacpac:
+    required: false
+    description: Set to true to upload the dacpac as an artifact for later stages.
+    default: true
+  # dotnet-version:
+  #   required: false
+  #   description: The .net version
+  #   default: 6.0.201
+  # ghcr-pull-token:
+  #   required: true
+  #   description: A token with access to GitHub Packages, e.g. GHCR_PULL_TOKEN
+  # ghcr-pull-token-dependabot:
+  #   required: true
+  #   description: A Dependabot token with access to GitHub Packages, e.g. GH_PACKAGES_READ_TOKEN
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1
+      with:
+        # Folder location of where vswhere.exe is located if a self-hosted agent
+        vswhere-path: # optional
+        # Version of Visual Studio to search; defaults to latest if not specified
+        vs-version: # optional
+
+      # make sure double slash due to single it will be escape
+    - name: Run a multi-line script
+      shell: bash
+      run: |
+        msbuild.exe DB\\${{ inputs.db-projectname }}\\${{ inputs.db-projectname }}.sqlproj -p:Configuration=Release -p:Platform=x64 -t:Rebuild -p:OutDir=.\\bin\\Release
+
+    - name: Upload dacpac file [${{ inputs.upload-dacpac }}]
+      if: ${{ inputs.upload-dacpac == 'true' }}
+      uses: actions/upload-artifact@v2.1.4
+      with:
+        name: ${{ inputs.db-projectname }}
+        path: DB\${{ inputs.db-projectname }}\bin\Release\*.*
