@@ -19,5 +19,5 @@ $elements = @()
     Write-Host $($elements.replace('"','\"') | ConvertTo-JSON -Compress)
   # } else {
     # Output the result for consumption by GH Actions
-    Write-Host "::set-output name=matrix::$($elements.replace('"','\"') | ConvertTo-JSON -Compress)"
+    # Write-Host "::set-output name=matrix::$($elements.replace('"','\"') | ConvertTo-JSON -Compress)"
   # }

@@ -32,23 +32,23 @@ jobs:
         run: |
             "& .github/workflows/create-matrix.ps1"
 
-  build:
-    needs: [matrix]
-    runs-on: ubuntu-latest 
+  # build:
+  #   needs: [matrix]
+  #   runs-on: ubuntu-latest 
 
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
 
 
-    steps:
-      - name: Show matrix ${{ matrix.db }}
-        shell: pwsh
-        run: |
-            echo "DBName = ${{ matrix.db }}"
+  #   steps:
+  #     - name: Show matrix ${{ matrix.db }}
+  #       shell: pwsh
+  #       run: |
+  #           echo "DBName = ${{ matrix.db }}"
       
-      # - name: Database Build ${{ matrix.cfg.db }}
-      #   uses: ./.github/actions/database-build
-      #   with:
-      #     db-projectname: ${{ matrix.cfg.db }}
-      #     upload-dacpac: true
+  #     # - name: Database Build ${{ matrix.cfg.db }}
+  #     #   uses: ./.github/actions/database-build
+  #     #   with:
+  #     #     db-projectname: ${{ matrix.cfg.db }}
+  #     #     upload-dacpac: true
