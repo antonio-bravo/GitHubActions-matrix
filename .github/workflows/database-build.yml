@@ -41,11 +41,11 @@ jobs:
       matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
 
 
-  #   steps:
-  #     - name: Show matrix ${{ matrix.db }}
-  #       shell: pwsh
-  #       run: |
-  #           echo "DBName = ${{ matrix.db }}"
+    steps:
+      - name: Show matrix ${{ matrix.db }}
+        shell: pwsh
+        run: |
+            echo "DBName = ${{ matrix.db }}"
       
   #     # - name: Database Build ${{ matrix.cfg.db }}
   #     #   uses: ./.github/actions/database-build
