@@ -6,7 +6,7 @@ param(
 
 $Raw = $false
 # $element = "db"
-[String[]]$array = ("db1", "db2")
+[String[]]$array = ('db1', 'db2')
 $elements = @()
 
 @($array) | ForEach-Object {
@@ -15,9 +15,10 @@ $elements = @()
     }
 }
 
-# if ($Raw) {
-    Write-Host $($elements.replace('"','\"') | ConvertTo-JSON -Compress)
-  # } else {
+ if ($Raw) {
+    Write-Host ($elements | ConvertTo-JSON -Compress)
+  } else {
     # Output the result for consumption by GH Actions
-    # Write-Host "::set-output name=matrix::$($elements.replace('"','\"') | ConvertTo-JSON -Compress)"
-  # }
+     Write-Host "::set-output name=matrix::$($elements | ConvertTo-JSON -Compress -Depth 50 | % { [System.Text.RegularExpressions.Regex]::Unescape($_) })"
+     
+  }
