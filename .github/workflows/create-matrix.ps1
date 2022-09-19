@@ -15,9 +15,9 @@ $elements = @()
     }
 }
 
-if ($Raw) {
-    Write-Host ($elements.replace('"','\"') | ConvertTo-JSON)
-  } else {
+# if ($Raw) {
+    Write-Host $($elements.replace('"','\"') | ConvertTo-JSON -Compress)
+  # } else {
     # Output the result for consumption by GH Actions
     Write-Host "::set-output name=matrix::$($elements.replace('"','\"') | ConvertTo-JSON -Compress)"
-  }
+  # }
