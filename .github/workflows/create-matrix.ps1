@@ -16,9 +16,9 @@ $elements = @()
 }
 
  if ($Raw) {
-    Write-Host ($elements | ConvertTo-JSON -Compress)
+    Write-Host (($elements | ConvertTo-JSON -Compress) -replace '([\\]*)"', '$1$1\"'))
   } else {
     # Output the result for consumption by GH Actions
-     Write-Host "::set-output name=matrix::$($elements | ConvertTo-JSON -Compress -Depth 50 | % { [System.Text.RegularExpressions.Regex]::Unescape($_) })"
+     Write-Host "::set-output name=matrix::$($($elements | ConvertTo-JSON -Compress) -replace '([\\]*)"', '$1$1\"'))"
      
   }
