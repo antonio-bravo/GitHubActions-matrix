@@ -1,11 +1,10 @@
 param(
   [String]$element = "db"
-#   [String[]]$array,
+  [String[]]$array
 )
 
-$Raw = $false
 # $element = "db"
-[String[]]$array = ('db1', 'db2')
+# [String[]]$array = ('db1', 'db2')
 $elements = @()
 
 @($array) | ForEach-Object {

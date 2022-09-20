@@ -1,10 +1,10 @@
 name: Database Build
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
   workflow_dispatch:
     inputs:
       db-projectname:
@@ -30,7 +30,7 @@ jobs:
         # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
         #echo '::set-output name=matrix::[{"db":"db1"}]'
         run: |
-            $output=.github/workflows/create-matrix.ps1
+            $output=.github/workflows/create-matrix.ps1 -array ${{ inputs.db-projectname }}
             Write-Host "::set-output name=matrix::$output"
 
       - name: see json
