@@ -97,7 +97,11 @@ jobs:
 ### **Errors got**
 ```
 Database Build: .github#L1
-Error when evaluating 'strategy' for job 'build'. .github/workflows/database-build.yml (Line: 41, Col: 15): Error parsing fromJson,.github/workflows/database-build.yml (Line: 41, Col: 15): Error reading JToken from JsonReader. Path '', line 0, position 0.,.github/workflows/database-build.yml (Line: 41, Col: 15): Unexpected type of value '', expected type: Mapping.
+Error when evaluating 'strategy' for job 'build'. .github/workflows/database-build.yml (Line: 41, Col: 15): 
+Error parsing fromJson,.github/workflows/database-build.yml (Line: 41, Col: 15): 
+Error reading JToken from JsonReader. Path '', line 0, position 0.,
+.github/workflows/database-build.yml (Line: 41, Col: 15): 
+Unexpected type of value '', expected type: Mapping.
 ```
 ![error](error.png)
 
