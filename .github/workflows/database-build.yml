@@ -58,9 +58,10 @@ jobs:
       #   shell: pwsh
       #   run: |
       #       echo "DBName = ${{ matrix.db }}"
-      - name: "db:${{ matrix.db }}"
+      - name: ${{ matrix.db }}
+        shell: pwsh
         run: |
-            Write-Host "${{ needs.matrix.outputs.matrix-json }}"
+            Write-Host "${{ matrix.db }}"
 
 
 
