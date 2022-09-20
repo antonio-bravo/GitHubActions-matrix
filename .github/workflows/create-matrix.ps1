@@ -31,5 +31,5 @@ $Jobs = @()
     db = $_
   }
 }
-
-Write-Host "::set-output name=matrix::$($Jobs | ConvertTo-JSON -Compress))"
+return $($Jobs | ConvertTo-JSON -Compress))
+#Write-Host "::set-output name=matrix::$($Jobs | ConvertTo-JSON -Compress))"
