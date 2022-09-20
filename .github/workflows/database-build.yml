@@ -30,23 +30,25 @@ jobs:
         # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
         #echo '::set-output name=matrix::[{"db":"db1"}]'
         run: |
-            echo '::set-output name=matrix::{"db":"db1"}'
+            "& .github/workflows/create-matrix.ps1"
 
   build:
     needs: [matrix]
+
+    strategy:
+      fail-fast: false
+      matrix: 
+        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+    name: "${{ matrix.db }}"
     runs-on: ubuntu-latest 
 
-    # strategy:
-    #   fail-fast: false
-    #   matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
-
-
     steps:
+      - uses: actions/checkout@v2
       # - name: Show matrix ${{ matrix.db }}
       #   shell: pwsh
       #   run: |
       #       echo "DBName = ${{ matrix.db }}"
-      - name: Show JSON
+      - name: "job_name:${{ matrix.job_name }} db:${{ matrix.db }}"
         run: |
             echo "${{ needs.matrix.outputs.matrix-json }}"
 
