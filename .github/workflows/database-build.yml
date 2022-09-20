@@ -32,6 +32,14 @@ jobs:
         run: |
             "& .github/workflows/create-matrix.ps1"
 
+      - name: see json
+        shell: pwsh
+        #use a small powershell script to generaet the matrix
+        # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
+        #echo '::set-output name=matrix::[{"db":"db1"}]'
+        run: |
+             Write-Host (${{steps.set-matrix.outputs.matrix}})
+
   build:
     needs: [matrix]
 
