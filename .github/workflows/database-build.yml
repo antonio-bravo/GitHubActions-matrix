@@ -31,7 +31,7 @@ jobs:
         #echo '::set-output name=matrix::[{"db":"db1"}]'
         run: |
             $output = "& .github/workflows/create-matrix.ps1"
-            Write-Host ("::set-output name=matrix::$output")
+            Write-Host "::set-output name=matrix::$output"
 
       - name: see json
         shell: pwsh
