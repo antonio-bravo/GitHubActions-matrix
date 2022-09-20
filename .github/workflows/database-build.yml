@@ -6,10 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
-    # inputs:
-    #   db-projectname:
-    #     description: Database [dbProject1, dbProject2]
-    #     required: true
+    inputs:
+      db-projectname:
+        description: Database [dbProject1, dbProject2]
+        required: true
 
 
 concurrency:
