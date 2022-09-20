@@ -1,5 +1,5 @@
 param(
-  [String]$element = "db"
+  [String]$element = "db",
   [String[]]$array
 )
 
