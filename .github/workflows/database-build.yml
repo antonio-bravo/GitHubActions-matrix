@@ -47,7 +47,6 @@ jobs:
       #   run: |
       #       echo "DBName = ${{ matrix.db }}"
       - name: Show JSON
-        shell: shell
         run: |
             echo "${{ needs.matrix.outputs.matrix-json }}"
 
