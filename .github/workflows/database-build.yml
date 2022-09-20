@@ -30,7 +30,7 @@ jobs:
         # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
         #echo '::set-output name=matrix::[{"db":"db1"}]'
         run: |
-            $output = "& .github/workflows/create-matrix.ps1"
+            $output=.github/workflows/create-matrix.ps1
             Write-Host "::set-output name=matrix::$output"
 
       - name: see json
