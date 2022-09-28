@@ -21,7 +21,7 @@ $countarray = $array.Count
 
 @($array) | ForEach-Object {
     $elements += @{
-        db = $_
+        $element = $_
     }
 }
 
