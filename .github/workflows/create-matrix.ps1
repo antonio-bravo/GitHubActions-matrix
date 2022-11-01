@@ -21,6 +21,9 @@ if ($countarray = 1) {
   return "[$($elements | ConvertTo-JSON -Compress )]"
 }
 else {
-  return $($elements | ConvertTo-JSON -Compress)
+  #Remove additional [] at begining and end
+  $r = $($elements | ConvertTo-JSON -Compress)
+  $r = $r.Substring( 1, $r.Length -1)
+  return $r
 }
 
