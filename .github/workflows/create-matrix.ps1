@@ -18,12 +18,9 @@ $countarray = $array.Count
 #Write-Host "::set-output name=matrix::$($($elements | ConvertTo-JSON -Compress) -replace '([\\]*)"', '$1$1\"'))"
 if ($countarray = 1) {
   #add [] when there is only one element in the array
-  return "[$($elements | ConvertTo-JSON -Compress )]"
+  return "[[$($elements | ConvertTo-JSON -Compress )]]"
 }
 else {
-  #Remove additional [] at begining and end
-  $r = $($elements | ConvertTo-JSON -Compress)
-  $r = $r.Substring( 1, $r.Length -1)
-  return $r
+  return $($elements | ConvertTo-JSON -Compress)
 }
 
