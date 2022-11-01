@@ -32,7 +32,11 @@ jobs:
         run: |
             $output=.github/workflows/create-matrix.ps1 -array ${{ inputs.db-projectname }}
             #Remove additional [] at begining and end
-            $output = $output.Substring( 1, $output.Length -1)
+            if ($output.Substring(0,2) -eq "[[") 
+            {
+              $output = $output.Substring( 1, $output.Length -1)
+            }
+            
             echo "matrix=$output" | Out-File -FilePath $Env:GITHUB_OUTPUT -Encoding utf8 -Append
           
           # The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
