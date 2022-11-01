@@ -34,9 +34,7 @@ jobs:
             $output = $output.Substring( 1, $output.Length -1)
             #Write-Host "::set-output name=matrix::$output"
             $output1 =  "matrix=$output"
-            $GITHUB_OUTPUT = $output1
-
-            #Write-Host "matrix=$output" >> $GITHUB_OUTPUT
+            Write-Host "matrix=$output" >> $GITHUB_OUTPUT
           
           # The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
           # Write-Host "::set-output name=matrix::$output"
