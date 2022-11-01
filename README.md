@@ -70,7 +70,16 @@ jobs:
         #echo '::set-output name=matrix::[{"db":"db1"}]'
         run: |
             $output=.github/workflows/create-matrix.ps1 -array ${{ inputs.db-projectname }}
-            Write-Host "::set-output name=matrix::$output"
+            #Remove additional [] at begining and end
+            if ($output.Substring(0,2) -eq "[[") 
+            {
+              $output = $output.Substring( 1, $output.Length -1)
+            }
+            
+            echo "matrix=$output" | Out-File -FilePath $Env:GITHUB_OUTPUT -Encoding utf8 -Append
+          
+          # The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+          # Write-Host "::set-output name=matrix::$output"
       - name: see json
         shell: pwsh
         run: |
