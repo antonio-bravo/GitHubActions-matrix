@@ -32,9 +32,9 @@ jobs:
         run: |
             $output=.github/workflows/create-matrix.ps1 -array ${{ inputs.db-projectname }}
             $output = $output.Substring( 1, $output.Length -1)
-            Write-Host "::set-output name=matrix::$output"
-            # $output1 =  "matrix=$output"
-            # $GITHUB_OUTPUT = $output1
+            #Write-Host "::set-output name=matrix::$output"
+            $output1 =  "matrix=$output"
+            $GITHUB_OUTPUT = $output1
 
             #Write-Host "matrix=$output" >> $GITHUB_OUTPUT
           
