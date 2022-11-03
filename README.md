@@ -8,6 +8,9 @@ This project is used to create a **dynamic matrix for GitHub Actions** in order 
 2. Workflow [database-build.yml](https://github.com/antonio-bravo/GitHubActions-matrix/blob/main/.github/workflows/database-build.yml) on .github/workflows/database-build.yml
 
 ### **1. create-matrix.ps1**
+<details>
+  <summary>Script</summary>
+  
 ``` powershell
 param(
   [String]$element = "db",
@@ -35,8 +38,13 @@ else {
   return $($elements | ConvertTo-JSON -Compress)
 }
 ```
+  
+</details>
 
 ### **2. database-build.yml**
+<details>
+  <summary>Script</summary>
+  
 ``` yaml
 name: Database Build
 
@@ -102,6 +110,8 @@ jobs:
         run: |
             Write-Host "${{ matrix.db }}"
 ```
+  
+</details>
 
 ### **Errors got**
 ```
@@ -112,7 +122,7 @@ Error reading JToken from JsonReader. Path '', line 0, position 0.,
 .github/workflows/database-build.yml (Line: 41, Col: 15): 
 Unexpected type of value '', expected type: Mapping.
 ```
-![error](error.png)
+![error](images/error.png)
 
 ### **When it was successfully run and generated :D**
 ![ok](images/ok.png)
