@@ -36,7 +36,7 @@ jobs:
       - name: See all
         shell: bash
         run: |
-          printenv
+          echo "$GITHUB_ENV"
 
       # - name: Set Environment Variables
       #   uses: ./.github/actions/set-enviroment-variable
@@ -45,18 +45,13 @@ jobs:
 
   see:
     needs: setvariable
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.os }}
     steps:
       - name: See variable os
         shell: bash
         run: |
-          echo ${{ env.os }}
-          echo "$os"
-
-      - name: See all
-        shell: bash
-        run: |
-          printenv
+          echo "${{ env.os }}"
+          echo "$GITHUB_ENV"
 
   # deploy:
   #   name: Using variable from environment imported from file os = ${{ env.os }}
