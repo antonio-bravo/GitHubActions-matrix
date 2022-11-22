@@ -25,6 +25,7 @@ jobs:
         shell: bash
         run: |
           echo ${{ env.os }}
+          echo "$os"
 
       - name: See all
         shell: bash
