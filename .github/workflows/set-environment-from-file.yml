@@ -21,17 +21,22 @@ jobs:
     needs: setvariable
     runs-on: ubuntu-latest
     steps:
-      - name: See
+      - name: See variable os
+        shell: bash
+        run: |
+          echo ${{ env.os }}
+
+      - name: See all
         shell: bash
         run: |
           printenv
 
-  # deploy:
-  #   name: Using variable from environment imported from file os = ${{ env.os }}
-  #   needs: [setvariable, see]
-  #   runs-on: ${{ env.OS }}
-  #   steps:
-  #     - name: See
-  #       shell: bash
-  #       run: |
-  #         printenv
+  deploy:
+    name: Using variable from environment imported from file os = ${{ env.os }}
+    needs: [setvariable, see]
+    runs-on: ${{ env.os }}
+    steps:
+      - name: See
+        shell: bash
+        run: |
+          echo ${{ env.os }}
