@@ -9,5 +9,6 @@ runs:
   using: "composite"
   steps:
     - run: |
-        sed "" ${{ inputs.varFilePath }} >> $GITHUB_ENV
+        while read line; do echo $line >> $GITHUB_ENV; done < ${{ inputs.varFilePath }}
+        # sed "" ${{ inputs.varFilePath }} >> $GITHUB_ENV
       shell: bash
