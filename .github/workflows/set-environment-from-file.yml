@@ -11,7 +11,16 @@ jobs:
   setvariable:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      # - uses: actions/checkout@v3
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "action_state=yellow" >> $GITHUB_ENV
+      - name: Use the value
+        id: step_two
+        run: |
+          echo "${{ env.action_state }}" # This will output 'yellow'
+
       - name: See variable os
         shell: bash
         run: |
@@ -21,8 +30,8 @@ jobs:
       - name: See variable os
         shell: bash
         run: |
-          echo ${{ env.os }}
-          echo "$os"
+          echo "${{ env.os }}"
+
 
       - name: See all
         shell: bash
