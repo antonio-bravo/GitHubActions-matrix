@@ -12,10 +12,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set Environment Variables
-        uses: ./.github/actions/set-enviroment-variable
-        with:
-          varFilePath: ./.github/variables/variables.env
+      - name: See variable os
+        shell: bash
+        run: |
+          echo "os=ubuntu-latest" >> $GITHUB_ENV
+          echo "$os"
+
+      - name: See variable os
+        shell: bash
+        run: |
+          echo ${{ env.os }}
+          echo "$os"
+
+      - name: See all
+        shell: bash
+        run: |
+          printenv
+
+      # - name: Set Environment Variables
+      #   uses: ./.github/actions/set-enviroment-variable
+      #   with:
+      #     varFilePath: ./.github/variables/variables.env
 
   see:
     needs: setvariable
