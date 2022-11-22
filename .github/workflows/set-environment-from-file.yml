@@ -31,12 +31,12 @@ jobs:
         run: |
           printenv
 
-  deploy:
-    name: Using variable from environment imported from file os = ${{ env.os }}
-    needs: [setvariable, see]
-    runs-on: ${{ env.os }}
-    steps:
-      - name: See
-        shell: bash
-        run: |
-          echo ${{ env.os }}
+  # deploy:
+  #   name: Using variable from environment imported from file os = ${{ env.os }}
+  #   needs: [setvariable, see]
+  #   runs-on: ${{ env.os }}
+  #   steps:
+  #     - name: See
+  #       shell: bash
+  #       run: |
+  #         echo ${{ env.os }}
