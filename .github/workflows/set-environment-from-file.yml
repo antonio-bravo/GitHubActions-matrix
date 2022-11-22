@@ -44,15 +44,15 @@ jobs:
           echo "$GITHUB_ENV"
 
 
-  # see:
-  #   needs: setvariable
-  #   runs-on: ${{ env.os }}
-  #   steps:
-  #     - name: See variable os
-  #       shell: bash
-  #       run: |
-  #         echo "${{ env.os }}"
-  #         echo "$GITHUB_ENV"
+  see:
+    needs: setvariable
+    runs-on: ubuntu-latest
+    steps:
+      - name: See variable
+        shell: bash
+        run: |
+          echo "${{ env.OS }}"
+          echo "$GITHUB_ENV"
 
   # deploy:
   #   name: Using variable from environment imported from file os = ${{ env.os }}
