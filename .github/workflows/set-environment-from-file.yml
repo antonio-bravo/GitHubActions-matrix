@@ -11,26 +11,31 @@ jobs:
   setvariable:
     runs-on: ubuntu-latest
     steps:
-      # - uses: actions/checkout@v3
-      - name: Set the value
-        id: step_one
-        run: |
-          echo "action_state=yellow" >> $GITHUB_ENV
-      - name: Use the value
-        id: step_two
-        run: |
-          echo "${{ env.action_state }}" # This will output 'yellow'
+      - uses: actions/checkout@v3
+      - name: Set Environment Variables
+        uses: ./.github/actions/set-enviroment-variable
+        with:
+          varFilePath: ./.github/variables/variables.env
 
-      - name: See variable os
-        shell: bash
-        run: |
-          echo "os=ubuntu-latest" >> $GITHUB_ENV
-          echo "$os"
+      # - name: Set the value
+      #   id: step_one
+      #   run: |
+      #     echo "action_state=yellow" >> $GITHUB_ENV
+      # - name: Use the value
+      #   id: step_two
+      #   run: |
+      #     echo "${{ env.action_state }}" # This will output 'yellow'
 
-      - name: See variable os
-        shell: bash
-        run: |
-          echo "${{ env.os }}"
+      # - name: See variable os
+      #   shell: bash
+      #   run: |
+      #     echo "os=ubuntu-latest" >> $GITHUB_ENV
+      #     echo "$os"
+
+      # - name: See variable os
+      #   shell: bash
+      #   run: |
+      #     echo "${{ env.os }}"
 
 
       - name: See all
@@ -38,10 +43,6 @@ jobs:
         run: |
           echo "$GITHUB_ENV"
 
-      # - name: Set Environment Variables
-      #   uses: ./.github/actions/set-enviroment-variable
-      #   with:
-      #     varFilePath: ./.github/variables/variables.env
 
   # see:
   #   needs: setvariable
