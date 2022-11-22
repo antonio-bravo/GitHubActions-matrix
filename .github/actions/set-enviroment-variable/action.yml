@@ -10,5 +10,13 @@ runs:
   steps:
     - run: |
         # while read line; do echo $line >> $GITHUB_ENV; done < ${{ inputs.varFilePath }}
-        sed "" ${{ inputs.varFilePath }} >> $GITHUB_ENV
+        # sed "" ${{ inputs.varFilePath }} >> $GITHUB_ENV
+        filename='${{ inputs.varFilePath }}'
+        # n=1
+        while read line; do
+        # reading each line
+        # echo "Line No. $n : $line"
+        echo "$line" >> $GITHUB_ENV
+        # n=$((n+1))
+        done < $filename
       shell: bash
