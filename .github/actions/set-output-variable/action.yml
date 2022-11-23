@@ -10,14 +10,14 @@ runs:
   steps:
     - run: |
         # while read line; do echo $line >> $GITHUB_OUTPUT; done < ${{ inputs.varFilePath }}
-        sed "" ${{ inputs.varFilePath }} >> $GITHUB_OUTPUT
+        # sed "" ${{ inputs.varFilePath }} >> $GITHUB_OUTPUT
         
-        # filename='${{ inputs.varFilePath }}'
-        # # n=1
-        # while read line; do
-        # # reading each line
-        # # echo "Line No. $n : $line"
-        # echo "$line" >> $GITHUB_OUTPUT
-        # # n=$((n+1))
-        # done < $filename
+        filename='${{ inputs.varFilePath }}'
+        # n=1
+        while read line; do
+        # reading each line
+        # echo "Line No. $n : $line"
+        echo "$line" >> $GITHUB_OUTPUT
+        # n=$((n+1))
+        done < $filename
       shell: bash
