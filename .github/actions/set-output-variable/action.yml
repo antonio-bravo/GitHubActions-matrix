@@ -5,19 +5,23 @@ inputs:
     description: 'File path to variable file or directory. Defaults to ./.github/variables/* if none specified and runs against each file in that directory.'
     required: false
     default: ./.github/variables/*
+
+  filterValue:
+    description: 'String starting with'
+    required: false
+    default: '*'
+
 runs:
   using: "composite"
   steps:
     - run: |
-        # while read line; do echo $line >> $GITHUB_OUTPUT; done < ${{ inputs.varFilePath }}
-        # sed "" ${{ inputs.varFilePath }} >> $GITHUB_OUTPUT
-        
         filename='${{ inputs.varFilePath }}'
-        # n=1
+        filter='${{ inputs.filterValue }}'
+
         while read line; do
-        # reading each line
-        # echo "Line No. $n : $line"
-        echo "$line" >> $GITHUB_OUTPUT
-        # n=$((n+1))
+          if  [[ $line == $filter ]] ;
+          then
+              echo "$line" >> $GITHUB_OUTPUT
+          fi
         done < $filename
       shell: bash

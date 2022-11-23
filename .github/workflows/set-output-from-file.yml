@@ -1,4 +1,4 @@
-name: Set Ooutput Variables from file
+name: Set Output Variables from file
 
 on:
   workflow_dispatch:
@@ -16,19 +16,19 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set Output Variables
         id: oo
-        # uses: ./.github/actions/set-output-variable
-        # with:
-        #   varFilePath: ./.github/variables/variables.env
-        run: |
-          echo "OS=ubuntu-latest" >> $GITHUB_OUTPUT
-          echo "MYVAR1=var1" >> $GITHUB_OUTPUT
-          echo "MYVAR2=var2" >> $GITHUB_OUTPUT
+        uses: ./.github/actions/set-output-variable
+        with:
+          varFilePath: ./.github/variables/variables.env
+          filterValue: 'OS=*'
+      # - name: Set Output Variables
+      #   run: |
+      #     echo "OS=ubuntu-latest" >> $GITHUB_OUTPUT
+      #     echo "MYVAR1=var1" >> $GITHUB_OUTPUT
+      #     echo "MYVAR2=var2" >> $GITHUB_OUTPUT
 
       - name: Get output
         run: |
           echo "os ${{ steps.oo.outputs.OS }}"     # - name: Set the value
-          echo "MYVAR1 ${{ steps.oo.outputs.MYVAR1 }}"     # - name: Set the value
-          echo "MYVAR2 ${{ steps.oo.outputs.MYVAR2 }}"     # - name: Set the value
 
 
       #   id: step_one
@@ -50,13 +50,6 @@ jobs:
       #   run: |
       #     echo "${{ env.os }}"
 
-
-      - name: See all
-        shell: bash
-        run: |
-          echo "$GITHUB_OUTPUT"
-
-
   see:
     needs: setvariable
     runs-on: ${{ needs.setvariable.outputs.outputs.OS }}
@@ -65,8 +58,6 @@ jobs:
         shell: bash
         run: |
           echo "${{ needs.setvariable.outputs.outputs.OS }}"
-          echo "$GITHUB_ENV"
-          echo "GITHUB_OUTPUT"
 
   # deploy:
   #   name: Using variable from environment imported from file os = ${{ env.os }}
