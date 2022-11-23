@@ -1,0 +1,23 @@
+name: 'Set output variables'
+description: 'Configures output variables for a workflow'
+inputs:
+  varFilePath:
+    description: 'File path to variable file or directory. Defaults to ./.github/variables/* if none specified and runs against each file in that directory.'
+    required: false
+    default: ./.github/variables/*
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        # while read line; do echo $line >> $GITHUB_OUTPUT; done < ${{ inputs.varFilePath }}
+        sed "" ${{ inputs.varFilePath }} >> $GITHUB_OUTPUT
+        
+        # filename='${{ inputs.varFilePath }}'
+        # # n=1
+        # while read line; do
+        # # reading each line
+        # # echo "Line No. $n : $line"
+        # echo "$line" >> $GITHUB_OUTPUT
+        # # n=$((n+1))
+        # done < $filename
+      shell: bash

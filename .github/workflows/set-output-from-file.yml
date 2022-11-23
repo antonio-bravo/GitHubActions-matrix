@@ -1,0 +1,73 @@
+name: Set Ooutput Variables from file
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setvariable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Output Variables
+        id: oo
+        uses: ./.github/actions/set-output-variable
+        with:
+          varFilePath: ./.github/variables/variables.env
+
+      - name: Get output
+        run: |
+          echo "os ${{ steps.oo.outputs.OS }}"     # - name: Set the value
+          echo "MYVAR1 ${{ steps.oo.outputs.MYVAR1 }}"     # - name: Set the value
+          echo "MYVAR2 ${{ steps.oo.outputs.MYVAR2 }}"     # - name: Set the value
+
+
+      #   id: step_one
+      #   run: |
+      #     echo "action_state=yellow" >> $GITHUB_ENV
+      # - name: Use the value
+      #   id: step_two
+      #   run: |
+      #     echo "${{ env.action_state }}" # This will output 'yellow'
+
+      # - name: See variable os
+      #   shell: bash
+      #   run: |
+      #     echo "os=ubuntu-latest" >> $GITHUB_ENV
+      #     echo "$os"
+
+      # - name: See variable os
+      #   shell: bash
+      #   run: |
+      #     echo "${{ env.os }}"
+
+
+      - name: See all
+        shell: bash
+        run: |
+          echo "$GITHUB_OUTPUT"
+
+
+  see:
+    needs: setvariable
+    runs-on: ${{ steps.oo.outputs.OS }}
+    steps:
+      - name: See variable
+        shell: bash
+        run: |
+          echo "${{ env.OS }}"
+          echo "$GITHUB_ENV"
+          echo "GITHUB_OUTPUT"
+
+  # deploy:
+  #   name: Using variable from environment imported from file os = ${{ env.os }}
+  #   needs: [setvariable, see]
+  #   runs-on: ${{ env.os }}
+  #   steps:
+  #     - name: See
+  #       shell: bash
+  #       run: |
+  #         echo ${{ env.os }}
