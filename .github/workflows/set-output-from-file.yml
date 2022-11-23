@@ -16,9 +16,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set Output Variables
         id: oo
-        uses: ./.github/actions/set-output-variable
-        with:
-          varFilePath: ./.github/variables/variables.env
+        # uses: ./.github/actions/set-output-variable
+        # with:
+        #   varFilePath: ./.github/variables/variables.env
+        run: |
+          echo "OS=ubuntu-latest" >> $GITHUB_OUTPUT
+          echo "MYVAR1=var1" >> $GITHUB_OUTPUT
+          echo "MYVAR2=var2" >> $GITHUB_OUTPUT
 
       - name: Get output
         run: |
