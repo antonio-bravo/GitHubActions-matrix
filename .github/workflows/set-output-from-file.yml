@@ -10,6 +10,8 @@ concurrency:
 jobs:
   setvariable:
     runs-on: ubuntu-latest
+    outputs:
+      os: ${{ steps.oo.outputs.OS }}
     steps:
       - uses: actions/checkout@v3
       - name: Set Output Variables
@@ -53,12 +55,12 @@ jobs:
 
   see:
     needs: setvariable
-    runs-on: ${{ steps.oo.outputs.OS }}
+    runs-on: ${{ needs.setvariable.outputs.outputs.OS }}
     steps:
       - name: See variable
         shell: bash
         run: |
-          echo "${{ env.OS }}"
+          echo "${{ needs.setvariable.outputs.outputs.OS }}"
           echo "$GITHUB_ENV"
           echo "GITHUB_OUTPUT"
 
