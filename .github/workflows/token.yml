@@ -19,7 +19,7 @@ jobs:
           files: '["**/*.js"]'
         env:
           token: https://token.somecdn.com/
-          secret: ${{ secrets.SECRET }}
+          SECRET: ${{ secrets.SECRET }}
           
       - uses: actions/upload-artifact@v3
         with:
