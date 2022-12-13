@@ -17,8 +17,8 @@ jobs:
           tokenPrefix: '$('
           tokenSuffix: ')'        
           files: '["**/*.js"]'
-        env:
-          token: https://token.somecdn.com/
+#        env:
+#          token: https://token.somecdn.com/
           
       - uses: actions/upload-artifact@v3
         with:
