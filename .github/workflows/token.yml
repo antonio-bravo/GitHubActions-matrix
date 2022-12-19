@@ -1,0 +1,27 @@
+name: Replace token
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  work:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cschleiden/replace-tokens@v1.2
+        with:
+          tokenPrefix: '$('
+          tokenSuffix: ')'        
+          files: '["**/*.js"]'
+        env:
+          token: https://token.somecdn.com/
+          SECRET: ${{ secrets.SECRET }}
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: token.js
