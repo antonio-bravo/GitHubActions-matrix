@@ -1,0 +1,97 @@
+name: test-events
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    # inputs:
+    #   db-projectname:
+    #     description: Database [dbProject1, dbProject2]
+    #     required: true
+
+
+# concurrency:
+#   group: ${{ github.ref }}
+#   cancel-in-progress: true
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: ${{ github.event_name }}
+        if: ( github.event_name == 'push' )
+        shell: bash
+        run: |
+            echo "${{ github.event_name }}"
+      - name: Main + push
+        if: ( github.ref == 'refs/heads/main' && github.event_name == 'push' )
+        shell: bash
+        run: |
+            echo "run on main and push"
+
+
+  # matrix:
+  #   name: Generate matrix
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     matrix-json: ${{ steps.set-matrix.outputs.matrix }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - id: set-matrix
+  #       shell: pwsh
+  #       #use a small powershell script to generaet the matrix
+  #       # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
+  #       #echo '::set-output name=matrix::[{"db":"db1"}]'
+  #       run: |
+  #           $output=.github/workflows/create-matrix.ps1 -array ${{ inputs.db-projectname }}
+  #           #Remove additional [] at begining and end
+  #           if ($output.Substring(0,2) -eq "[[") 
+  #           {
+  #             $output = $output.Substring( 1, $output.Length -1)
+  #           }
+            
+  #           echo "matrix=$output" | Out-File -FilePath $Env:GITHUB_OUTPUT -Encoding utf8 -Append
+          
+  #         # The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+  #         # Write-Host "::set-output name=matrix::$output"
+
+  #     - name: see json
+  #       shell: pwsh
+  #       #use a small powershell script to generaet the matrix
+  #       # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
+  #       #echo '::set-output name=matrix::[{"db":"db1"}]'
+  #       run: |
+  #            Write-Host "output=${{steps.set-matrix.outputs.matrix}}"
+
+  # build:
+  #   needs: [matrix]
+
+  #   strategy:
+  #     fail-fast: false
+  #     matrix: 
+  #       include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+    
+  #   name: "${{ matrix.db }}"
+  #   runs-on: ubuntu-latest 
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     # - name: Show matrix ${{ matrix.db }}
+  #     #   shell: pwsh
+  #     #   run: |
+  #     #       echo "DBName = ${{ matrix.db }}"
+  #     - name: ${{ matrix.db }}
+  #       shell: pwsh
+  #       run: |
+  #           Write-Host "${{ matrix.db }}"
+
+
+
+  # #     # - name: Database Build ${{ matrix.cfg.db }}
+  # #     #   uses: ./.github/actions/database-build
+  # #     #   with:
+  # #     #     db-projectname: ${{ matrix.cfg.db }}
+  # #     #     upload-dacpac: true
