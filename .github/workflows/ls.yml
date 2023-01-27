@@ -8,6 +8,8 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: false
 
+# git diff --name-only main..$(git rev-parse --short HEAD)
+
 jobs:
   gitversion:
     runs-on: ubuntu-latest
@@ -20,7 +22,6 @@ jobs:
         run: |
           ls -a
 
-# git diff --name-only main..$(git rev-parse --short HEAD)
       - name: gitdiff
         run: |
           git diff-tree --no-commit-id --name-only -r $(git rev-parse --short HEAD
