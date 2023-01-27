@@ -22,4 +22,4 @@ jobs:
 
       - name: gitdiff
         run: |
-          git diff --name-only main $(git rev-parse --short HEAD)
+          git diff --name-only main..$(git rev-parse --short HEAD)
