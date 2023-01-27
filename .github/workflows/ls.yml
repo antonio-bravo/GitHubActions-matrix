@@ -1,7 +1,8 @@
-name: S
+name: LS
 
 on:
   workflow_dispatch:
+  pull_request:
 
 concurrency:
   group: ${{ github.ref }}
@@ -18,3 +19,7 @@ jobs:
       - name: ls
         run: |
           ls -a
+
+      - name: gitdiff
+        run: |
+          git diff --name-only $(git merge-base main HEAD)
