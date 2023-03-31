@@ -17,10 +17,10 @@ jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
-      - name: json environments
-      - run: |
-            echo ${{ toJson(environment) }}
-            
+      # - name: json environments
+      # - run: |
+      #       echo ${{ toJson(environment) }}
+
       - name: My Step
         run: |
           if [ "${{ env.ENVIRONMENT }}" = "dev" ]; then
