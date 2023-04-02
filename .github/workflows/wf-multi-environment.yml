@@ -17,9 +17,9 @@ jobs:
   job-env:
     runs-on: ubuntu-latest
     steps:
-      - name: json environments
-      - run: |
-            echo ${{ toJson(environment) }}
+      # - name: json environments
+      # - run: |
+      #       echo ${{ toJson(environment) }}
 
       - name: Dump GitHub context
         env:
