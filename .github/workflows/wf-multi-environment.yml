@@ -8,14 +8,56 @@ on:
         required: true
 
 # Definir una matriz de variables para diferentes entornos
-env:
-  DEV_ENV: dev
-  STAGING_ENV: staging
-  PROD_ENV: prod
+# env:
+#   DEV_ENV: dev
+#   STAGING_ENV: staging
+#   PROD_ENV: prod
 
 jobs:
+  job-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: json environments
+      - run: |
+            echo ${{ toJson(environment) }}
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+
+      - name: Show default environment variables
   my-job:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        stage: ['dev', 'test', 'pre']
+      fail-fast: true
+      max-parallel: 1
+    # set the environment to use (environment must exist and be named the same as the stage here)
+    environment:
+      name: ${{ matrix.stage }}
+
     steps:
       # - name: json environments
       # - run: |
@@ -37,11 +79,12 @@ jobs:
           fi
         env:
           # Establecer la variable de entorno para el entorno actual
-          ENVIRONMENT: ${{ env.${{ matrix.environment }} }}
+          ENVIRONMENT: ${{ matrix.stage }}
+          # ENVIRONMENT: ${{ env.${{ matrix.environment }} }}
         # Definir la matriz de variables para diferentes entornos
-        strategy:
-          matrix:
-            environment: [DEV_ENV, STAGING_ENV, PROD_ENV]
+        # strategy:
+        #   matrix:
+        #     environment: [DEV_ENV, STAGING_ENV, PROD_ENV]
 
 # concurrency:
 #   group: ${{ github.ref }}
