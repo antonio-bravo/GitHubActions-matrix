@@ -61,34 +61,42 @@ jobs:
     strategy:
       matrix:
         stage: ['dev', 'test', 'pre']
+        include:
+          - stage: 'dev'
+            storage: 'storage-dev'
+            npm: 'npm-dev'
+          - stage: 'test'
+            storage: 'storage-test'
+            npm: 'npm-test'
       fail-fast: true
       max-parallel: 1
     # set the environment to use (environment must exist and be named the same as the stage here)
     environment:
       name: ${{ matrix.stage }}
+      url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
 
+    env:
+      environment: ${{ matrix.stage }}
     steps:
-      # - name: json environments
-      # - run: |
-      #       echo ${{ toJson(environment) }}
-
       - name: My Step
         run: |
-          if [ "${{ env.ENVIRONMENT }}" = "dev" ]; then
-            echo "Dev environment"
-            # Add steps for dev environment
-          elif [ "${{ env.ENVIRONMENT }}" = "staging" ]; then
-            echo "Staging environment"
-            # Add steps for staging environment
-          elif [ "${{ env.ENVIRONMENT }}" = "prod" ]; then
-            echo "Production environment"
-            # Add steps for production environment
-          else
-            echo "Unknown environment"
-          fi
-        env:
-          # Establecer la variable de entorno para el entorno actual
-          ENVIRONMENT: ${{ matrix.stage }}
+          echo "stage=${{ matrix.stage }};storage=${{ matrix.storage }};npm=${{ matrix.npm }}"
+
+        #   if [ "${{ env.ENVIRONMENT }}" = "dev" ]; then
+        #     echo "Dev environment"
+        #     # Add steps for dev environment
+        #   elif [ "${{ env.ENVIRONMENT }}" = "staging" ]; then
+        #     echo "Staging environment"
+        #     # Add steps for staging environment
+        #   elif [ "${{ env.ENVIRONMENT }}" = "prod" ]; then
+        #     echo "Production environment"
+        #     # Add steps for production environment
+        #   else
+        #     echo "Unknown environment"
+        #   fi
+        # env:
+        #   # Establecer la variable de entorno para el entorno actual
+        #   ENVIRONMENT: ${{ matrix.stage }}
           # ENVIRONMENT: ${{ env.${{ matrix.environment }} }}
         # Definir la matriz de variables para diferentes entornos
         # strategy:
