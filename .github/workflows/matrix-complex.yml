@@ -94,7 +94,7 @@ jobs:
           echo "${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}"
           sleep 5s
   deploy:
-    needs: [docker_sender,docker_receiver,docker_emulator]
+    needs: [infra_deploy]
     strategy:
       matrix:
         stage: ['dev', 'test', 'pre','pro']
