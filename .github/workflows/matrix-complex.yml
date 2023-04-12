@@ -73,7 +73,7 @@ jobs:
     needs: [docker_sender,docker_receiver,docker_emulator]
     strategy:
       matrix:
-        stage: ['dev', 'test', 'pre']
+        stage: ['dev', 'test', 'pre','pro']
         include:
           - stage: 'dev'
             storage: 'storage-dev'
@@ -93,6 +93,21 @@ jobs:
       url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
 
     steps:
+      - name: Crea una nueva implementación
+        if: ${{ matrix.stage == 'pro'}}
+        run: |
+          gh deployment create \
+            --ref ${{ github.sha }} \
+            --environment pro \
+            --description "Nueva implementación"
+
+      - name: Espera por la aprobación manual del entorno
+        if: ${{ matrix.stage == 'pro'}}
+        run: |
+          gh deployment status \
+            --environment pro \
+            --wait-for-approval    
+
       - name: Deploy Infra ${{ matrix.stage }} 5s
         shell: bash
         run: |
