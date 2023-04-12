@@ -50,7 +50,7 @@ jobs:
           sleep 10s
 
   docker_receiver:
-    needs: [build,test]
+    needs: [build,test,infra]
     runs-on: ubuntu-latest
     steps:
       - name: docker_receiver 20s
@@ -60,7 +60,7 @@ jobs:
           sleep 20s
 
   docker_emulator:
-    needs: [build,test]
+    needs: [build,test,infra]
     runs-on: ubuntu-latest
     steps:
       - name: docker_emulator 5s
@@ -85,7 +85,7 @@ jobs:
             storage: 'storage-pre'
             npm: 'npm-pre'          
       fail-fast: true
-      max-parallel: 1
+      # max-parallel: 1
 
     runs-on: ubuntu-latest
     environment:
