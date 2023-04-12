@@ -29,7 +29,6 @@ jobs:
         run: |
           echo "infra"
           sleep 5s
-
   SonarQube:
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +37,6 @@ jobs:
         run: |
           echo "SonarQube"
           sleep 5s
-
   docker_sender:
     needs: [build,test,infra]
     runs-on: ubuntu-latest
@@ -48,9 +46,8 @@ jobs:
         run: |
           echo "docker_sender"
           sleep 10s
-
   docker_receiver:
-    needs: [build,test,infra]
+    needs: [build,test]
     runs-on: ubuntu-latest
     steps:
       - name: docker_receiver 20s
@@ -58,9 +55,8 @@ jobs:
         run: |
           echo "docker_receiver"
           sleep 20s
-
   docker_emulator:
-    needs: [build,test,infra]
+    needs: [build,test]
     runs-on: ubuntu-latest
     steps:
       - name: docker_emulator 5s
@@ -68,7 +64,6 @@ jobs:
         run: |
           echo "docker_emulator"
           sleep 5s
-
   infra_deploy:
     needs: [docker_sender,docker_receiver,docker_emulator]
     strategy:
@@ -85,7 +80,7 @@ jobs:
             storage: 'storage-pre'
             npm: 'npm-pre'          
       fail-fast: true
-      # max-parallel: 1
+      max-parallel: 1
 
     runs-on: ubuntu-latest
     environment:
@@ -93,29 +88,37 @@ jobs:
       url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
 
     steps:
-      - name: Crea una nueva implementación
-        if: ${{ matrix.stage == 'pro'}}
-        run: |
-          gh deployment create \
-            --ref ${{ github.sha }} \
-            --environment pro \
-            --description "Nueva implementación"
-
-      - name: Espera por la aprobación manual del entorno
-        if: ${{ matrix.stage == 'pro'}}
-        run: |
-          gh deployment status \
-            --environment pro \
-            --wait-for-approval    
-
       - name: Deploy Infra ${{ matrix.stage }} 5s
         shell: bash
         run: |
           echo "${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}"
           sleep 5s
+  deploy:
+    needs: [docker_sender,docker_receiver,docker_emulator]
+    strategy:
+      matrix:
+        stage: ['dev', 'test', 'pre','pro']
+        include:
+          - stage: 'dev'
+            storage: 'storage-dev'
+            npm: 'npm-dev'
+          - stage: 'test'
+            storage: 'storage-test'
+            npm: 'npm-test'
+          - stage: 'pre'
+            storage: 'storage-pre'
+            npm: 'npm-pre'          
+      fail-fast: true
+      max-parallel: 1
+
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ matrix.stage }}
+      url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
+
+    steps:
       - name: Deploy Code ${{ matrix.stage }} 5s
         shell: bash
         run: |
           echo "${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}"
           sleep 5s
-
