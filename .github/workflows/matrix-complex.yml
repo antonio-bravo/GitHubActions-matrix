@@ -1,0 +1,121 @@
+name: matrix-complex
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build 30s
+        shell: bash
+        run: |
+          echo "Build"
+          sleep 30s
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test 10s
+        shell: bash
+        run: |
+          echo "Test"
+          sleep 10s
+  infra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: infra 5s
+        shell: bash
+        run: |
+          echo "infra"
+          sleep 5s
+
+  docker_sender:
+    needs: [build,test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: docker_sender 10s
+        shell: bash
+        run: |
+          echo "docker_sender"
+          sleep 10s
+
+  docker_receiver:
+    needs: [build,test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: docker_receiver 20s
+        shell: bash
+        run: |
+          echo "docker_receiver"
+          sleep 20s
+
+  docker_emulator:
+    needs: [build,test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: docker_emulator 5s
+        shell: bash
+        run: |
+          echo "docker_emulator"
+          sleep 5s
+
+  infra_deploy:
+    needs: [docker_sender,docker_receiver,docker_emulator]
+    strategy:
+      matrix:
+        stage: ['dev', 'test', 'pre']
+        include:
+          - stage: 'dev'
+            storage: 'storage-dev'
+            npm: 'npm-dev'
+          - stage: 'test'
+            storage: 'storage-test'
+            npm: 'npm-test'
+          - stage: 'pre'
+            storage: 'storage-pre'
+            npm: 'npm-pre'          
+      fail-fast: true
+      max-parallel: 1
+
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ matrix.stage }}
+      url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
+
+    steps:
+      - name: Deploy Infra ${{ matrix.stage }} 5s
+        shell: bash
+        run: |
+          echo "${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}"
+          sleep 5s
+
+  deploy:
+    needs: [infra_deploy]
+    strategy:
+      matrix:
+        stage: ['dev', 'test', 'pre']
+        include:
+          - stage: 'dev'
+            storage: 'storage-dev'
+            npm: 'npm-dev'
+          - stage: 'test'
+            storage: 'storage-test'
+            npm: 'npm-test'
+          - stage: 'pre'
+            storage: 'storage-pre'
+            npm: 'npm-pre'          
+      fail-fast: true
+      max-parallel: 1
+
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ matrix.stage }}
+      url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
+
+    steps:
+      - name: Deploy Code ${{ matrix.stage }} 5s
+        shell: bash
+        run: |
+          echo "${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}"
+          sleep 5s
