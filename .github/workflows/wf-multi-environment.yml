@@ -69,7 +69,7 @@ jobs:
             storage: 'storage-test'
             npm: 'npm-test'
         allow_failures:
-          - stage: ['test','pre']
+          - stage: 'pre'
 
       # fail-fast: true
       max-parallel: 1
