@@ -68,8 +68,15 @@ jobs:
           - stage: 'test'
             storage: 'storage-test'
             npm: 'npm-test'
-      fail-fast: true
+        allow_failures:
+          - stage: ['test','pre']
+
+      # fail-fast: true
       max-parallel: 1
+
+    steps:
+      - run: npm install
+      - run: npm run build
     # set the environment to use (environment must exist and be named the same as the stage here)
     environment:
       name: ${{ matrix.stage }}
