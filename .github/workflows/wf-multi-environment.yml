@@ -70,8 +70,8 @@ jobs:
             npm: 'npm-test'
         allow_failures:
           - stage: ['test', 'pre']
-            
-      continue-on-error: true
+            continue-on-error: true
+
       # fail-fast: true
       # max-parallel: 1
 
