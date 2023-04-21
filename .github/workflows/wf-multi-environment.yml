@@ -72,7 +72,7 @@ jobs:
           - stage: ['test', 'pre']
 
       # fail-fast: true
-      max-parallel: 1
+      # max-parallel: 1
 
     # set the environment to use (environment must exist and be named the same as the stage here)
     environment:
