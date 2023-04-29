@@ -1,0 +1,58 @@
+name: Deployment Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    # Build job steps
+
+  test:
+    # Test job steps
+
+  deploy:
+    # Deployment job steps
+    needs: [build, test]
+
+  approval:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve deployment URL
+        run: echo DEPLOY_URL=$(curl -s -X GET -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }} | \
+          jq -r '.environment_url') >> $GITHUB_ENV
+
+      - name: Request approval
+        uses: peter-evans/create-pull-request@v3.11.1
+        with:
+          commit-message: Request deployment approval
+          title: Request deployment approval
+          branch: approval
+          body: |
+            Please review the following deployment and approve if it is acceptable:
+            ${{ env.DEPLOY_URL }}
+          reviewers: ${{ secrets.APPROVERS }}
+          labels: deployment-approval
+
+      - name: Wait for approval
+        uses: peter-evans/wait-for-deployment@v1.2.0
+        with:
+          deployment_id: ${{ github.event.deployment.id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to production
+        run: |
+          echo "Deployment steps to production"
+          sleep 5
+
+      # - name: Notify deploy completion
+      #   uses: appleboy/telegram-action@0.1.5
+      #   with:
+      #     to: ${{ secrets.TELEGRAM_CHAT_ID }}
+      #     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      #     message: |
+      #       Deployment to production is complete!
+      #       ${{ env.DEPLOY_URL }}
