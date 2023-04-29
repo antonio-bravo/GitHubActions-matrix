@@ -7,15 +7,24 @@ on:
 
 jobs:
   build:
-    # Build job steps
+    runs-on: ubuntu-latest
+    steps:
+      - name: build
+        run: echo "build"
 
   test:
-    # Test job steps
-
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        run: echo "test"
   deploy:
     # Deployment job steps
     needs: [build, test]
-
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy
+        run: echo "deploy"
+        
   approval:
     needs: [deploy]
     runs-on: ubuntu-latest
