@@ -1,0 +1,33 @@
+name: Test Approval
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+          - name: My Step
+            run: |
+              echo "Build your application"
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: test
+    steps:
+          - name: My Step
+            run: |
+              echo "deploy your application to the staging environment"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    environment: pre
+    permissions:
+      approvals: 1
+    steps:
+          - name: My Step
+            run: |
+              echo "deploy your application to the pre environment"
