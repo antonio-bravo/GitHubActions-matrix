@@ -77,7 +77,7 @@ jobs:
 
     # set the environment to use (environment must exist and be named the same as the stage here)
     environment:
-      name: ${{ matrix.stage }}
+      # name: ${{ matrix.stage }}
       url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
 
     env:
