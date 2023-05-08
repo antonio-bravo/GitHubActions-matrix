@@ -60,7 +60,7 @@ jobs:
     # needs: [job-env]
     strategy:
       matrix:
-        stage: ['dev', 'test', 'pre']
+        stage: ['dev', 'test', 'pre', 'pp']
         include:
           - stage: 'dev'
             storage: 'storage-dev'
