@@ -87,6 +87,10 @@ jobs:
         run: |
           echo "stage=${{ matrix.stage }};storage=${{ matrix.storage }};npm=${{ matrix.npm }}"
 
+      - name: View context attributes
+        uses: actions/github-script@v6
+        with:
+          script: console.log(context)
         #   if [ "${{ env.ENVIRONMENT }}" = "dev" ]; then
         #     echo "Dev environment"
         #     # Add steps for dev environment
