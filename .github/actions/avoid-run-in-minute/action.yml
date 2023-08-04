@@ -1,0 +1,49 @@
+name: Avoid to run/deploy in minute x
+description: This action avoids executing the run/deployment of code in prohibited minutes
+inputs:
+  avoid-minutes:
+    required: true
+    description: Set the exact list of minutes to avoid for example "00 15 30 45"
+    default: "00 15 30 45"
+
+  schedule-process-minutes:
+    required: true
+    description: Set the frequency in minutes the process is executed
+    default: 15
+
+  deployment-duration-minutes:
+    required: true
+    description: Set the Avg duration of deployment to avoid clash with prohibited minutes
+    default: 5
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run a multi-line script
+      shell: bash
+      run: |
+        # Get the current minute
+        current_minute=$(date +"%M")
+
+        # Define the list of minutes to avoid
+        avoid_minutes=(${{ inputs.avoid-minutes }})
+
+        # Check if the current minute is in the list of minutes to avoid
+        should_avoid=false
+        for minute in "${avoid_minutes[@]}"; do
+          if [[ $current_minute -ge $((minute - ${{ inputs.deployment-duration-minutes }})) && $current_minute -le $((minute + ${{ inputs.deployment-duration-minutes }})) ]]; then
+            should_avoid=true
+            break
+          fi
+        done
+
+        # If we should avoid running the code, calculate the sleep time until the next allowed minute
+        if [[ $should_avoid == true ]]; then
+          next_allowed_minute=$(( (current_minute + ${{ inputs.schedule-process-minutes }}) / ${{ inputs.schedule-process-minutes }} * ${{ inputs.schedule-process-minutes }} ))
+          sleep_time=$(( (next_allowed_minute - current_minute + 60) % 60 ))
+          echo "${sleep_time}m"
+          sleep ${sleep_time}m
+        fi
