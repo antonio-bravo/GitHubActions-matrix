@@ -23,4 +23,3 @@ jobs:
       - name: gitdiff
         run: |
           git diff-tree --no-commit-id --name-only -r $(git rev-parse --short HEAD)
-          

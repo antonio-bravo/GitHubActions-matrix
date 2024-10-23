@@ -1,0 +1,181 @@
+name: Workflow Multi Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      db-projectname:
+        description: Database [dbProject1, dbProject2]
+        required: true
+
+# Definir una matriz de variables para diferentes entornos
+# env:
+#   DEV_ENV: dev
+#   STAGING_ENV: staging
+#   PROD_ENV: prod
+
+
+jobs:
+  # job-env:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # - name: json environments
+  #     # - run: |
+  #     #       echo ${{ toJson(environment) }}
+
+  #     - name: Dump GitHub context
+  #       env:
+  #         GITHUB_CONTEXT: ${{ toJson(github) }}
+  #       run: echo "$GITHUB_CONTEXT"
+  #     - name: Dump job context
+  #       env:
+  #         JOB_CONTEXT: ${{ toJson(job) }}
+  #       run: echo "$JOB_CONTEXT"
+  #     - name: Dump steps context
+  #       env:
+  #         STEPS_CONTEXT: ${{ toJson(steps) }}
+  #       run: echo "$STEPS_CONTEXT"
+  #     - name: Dump runner context
+  #       env:
+  #         RUNNER_CONTEXT: ${{ toJson(runner) }}
+  #       run: echo "$RUNNER_CONTEXT"
+  #     - name: Dump strategy context
+  #       env:
+  #         STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+  #       run: echo "$STRATEGY_CONTEXT"
+  #     - name: Dump matrix context
+  #       env:
+  #         MATRIX_CONTEXT: ${{ toJson(matrix) }}
+  #       run: echo "$MATRIX_CONTEXT"
+
+  #     - name: Show default environment variables
+  #       run: |
+  #         echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
+  #         echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
+  #         echo "The run id is: $GITHUB_RUN_ID"
+  #         echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+  #         echo "GitHub SHA: $GITHUB_SHA"
+
+  my-job:
+    runs-on: ubuntu-latest
+    # needs: [job-env]
+    strategy:
+      matrix:
+        stage: ['dev', 'test', 'pre', 'pp']
+        include:
+          - stage: 'dev'
+            storage: 'storage-dev'
+            npm: 'npm-dev'
+          - stage: 'test'
+            storage: 'storage-test'
+            npm: 'npm-test'
+        allow_failures:
+          - stage: ['test', 'pre']
+            continue-on-error: true
+
+      # fail-fast: true
+      # max-parallel: 1
+
+    # set the environment to use (environment must exist and be named the same as the stage here)
+    environment:
+      name: ${{ matrix.stage }}
+      url: http://${{ matrix.stage }}.${{ matrix.storage }}.${{ matrix.npm }}.com
+
+    env:
+      environment: ${{ matrix.stage }}
+    steps:
+      - name: My Step
+        run: |
+          echo "stage=${{ matrix.stage }};storage=${{ matrix.storage }};npm=${{ matrix.npm }}"
+
+      - name: View context attributes
+        uses: actions/github-script@v6
+        with:
+          script: console.log(context)
+        #   if [ "${{ env.ENVIRONMENT }}" = "dev" ]; then
+        #     echo "Dev environment"
+        #     # Add steps for dev environment
+        #   elif [ "${{ env.ENVIRONMENT }}" = "staging" ]; then
+        #     echo "Staging environment"
+        #     # Add steps for staging environment
+        #   elif [ "${{ env.ENVIRONMENT }}" = "prod" ]; then
+        #     echo "Production environment"
+        #     # Add steps for production environment
+        #   else
+        #     echo "Unknown environment"
+        #   fi
+        # env:
+        #   # Establecer la variable de entorno para el entorno actual
+        #   ENVIRONMENT: ${{ matrix.stage }}
+          # ENVIRONMENT: ${{ env.${{ matrix.environment }} }}
+        # Definir la matriz de variables para diferentes entornos
+        # strategy:
+        #   matrix:
+        #     environment: [DEV_ENV, STAGING_ENV, PROD_ENV]
+
+# concurrency:
+#   group: ${{ github.ref }}
+#   cancel-in-progress: true
+
+# jobs:
+#   matrix:
+#     name: Generate matrix
+#     runs-on: ubuntu-latest
+#     outputs:
+#       matrix-json: ${{ steps.set-matrix.outputs.matrix }}
+#     steps:
+#       - uses: actions/checkout@v3
+#       - id: set-matrix
+#         shell: pwsh
+#         #use a small powershell script to generaet the matrix
+#         # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
+#         #echo '::set-output name=matrix::[{"db":"db1"}]'
+#         run: |
+#             $output=.github/workflows/create-matrix.ps1 -array ${{ inputs.db-projectname }}
+#             #Remove additional [] at begining and end
+#             if ($output.Substring(0,2) -eq "[[") 
+#             {
+#               $output = $output.Substring( 1, $output.Length -1)
+#             }
+            
+#             echo "matrix=$output" | Out-File -FilePath $Env:GITHUB_OUTPUT -Encoding utf8 -Append
+          
+#           # The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+#           # Write-Host "::set-output name=matrix::$output"
+
+#       - name: see json
+#         shell: pwsh
+#         #use a small powershell script to generaet the matrix
+#         # run: "& .github/workflows/create-matrix.ps1 -element='db' -array=${{ inputs.db-projectname }}"
+#         #echo '::set-output name=matrix::[{"db":"db1"}]'
+#         run: |
+#              Write-Host "output=${{steps.set-matrix.outputs.matrix}}"
+
+#   build:
+#     needs: [matrix]
+
+#     strategy:
+#       fail-fast: false
+#       matrix: 
+#         include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+    
+#     name: "${{ matrix.db }}"
+#     runs-on: ubuntu-latest 
+
+#     steps:
+#       - uses: actions/checkout@v3
+#       # - name: Show matrix ${{ matrix.db }}
+#       #   shell: pwsh
+#       #   run: |
+#       #       echo "DBName = ${{ matrix.db }}"
+#       - name: ${{ matrix.db }}
+#         shell: pwsh
+#         run: |
+#             Write-Host "${{ matrix.db }}"
+
+
+
+#   #     # - name: Database Build ${{ matrix.cfg.db }}
+#   #     #   uses: ./.github/actions/database-build
+#   #     #   with:
+#   #     #     db-projectname: ${{ matrix.cfg.db }}
+#   #     #     upload-dacpac: true
