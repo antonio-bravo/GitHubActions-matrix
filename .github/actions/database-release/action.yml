@@ -34,7 +34,7 @@ runs:
         creds: ${{ inputs.AZURE_CREDENTIALS }}        
 
     - name: Azure SQL Deploy
-      uses: Azure/sql-action@v1
+      uses: Azure/sql-action@v2
       with:
         # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
         server-name: ${{ inputs.targetSqlServerName }}
