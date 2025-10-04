@@ -1,7 +1,7 @@
 name: Dependabot auto-merge
 on: 
-    pull_request:
-    workflow_dispatch:
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -10,11 +10,12 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    if: contains(github.event.pull_request.user.login, '[bot]')
+    # if: github.event.pull_request.user.login == 'dependabot[bot]' || github.event.pull_request.user.login == 'renovate[bot]'
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@46cfd663b8c18cab02928a3fa963cf0e73994bb1
+        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Enable auto-merge for Dependabot PRs
