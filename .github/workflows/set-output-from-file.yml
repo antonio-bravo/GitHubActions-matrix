@@ -13,7 +13,7 @@ jobs:
     outputs:
       os: ${{ steps.oo.outputs.OS }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set Output Variables
         id: oo
         uses: ./.github/actions/set-output-variable
