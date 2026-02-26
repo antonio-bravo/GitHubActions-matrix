@@ -42,7 +42,7 @@ runs:
 
     - name: Upload dacpac file [${{ inputs.upload-dacpac }}]
       if: ${{ inputs.upload-dacpac == 'true' }}
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: ${{ inputs.db-projectname }}
         path: DB\${{ inputs.db-projectname }}\bin\Release\*.*
