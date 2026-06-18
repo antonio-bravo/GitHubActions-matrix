@@ -24,7 +24,7 @@ runs:
   using: composite
   steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v3
